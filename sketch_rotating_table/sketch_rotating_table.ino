@@ -4,6 +4,11 @@
 #define button A0
 #define potentiometer A2
 
+#define led_1 7
+#define led_2 8
+#define led_3 9
+#define led_4 10
+
 GButton motor_button(button);
 CustomStepper motor(2, 3, 4, 5);
 
@@ -14,6 +19,10 @@ int potentiometer_value;
 
 void setup() {
   pinMode(potentiometer, INPUT);
+  pinMode(led_1, OUTPUT);
+  pinMode(led_2, OUTPUT);
+  pinMode(led_3, OUTPUT);
+  pinMode(led_4, OUTPUT);
 
   motor_button.setDebounce(50);
   motor_button.setTimeout(300);

@@ -3,6 +3,10 @@
 
 #define button A0
 #define potentiometer A2
+#define led_1 7
+#define led_2 8
+#define led_3 9
+#define led_4 10
 
 #define led_1 7
 #define led_2 8
@@ -35,10 +39,12 @@ void setup() {
 }
 
 void loop() {
-  // Опрашиваем кнопку и запускаем мотор
+  // Опрашиваем кнопку
   motor_button.tick();
-  motor.run();
-
+  
+  // Зажигаем светодиод текущего режима
+  setModeLed(mode);
+  
   // Считываем значение регулятора и задаем скорость вращения мотора
   potentiometer_value = analogRead(potentiometer);
   potentiometer_value = map(potentiometer_value, 1000, 0, 3, 12);
@@ -68,6 +74,8 @@ void loop() {
     case 4: rotateAtAngle(90);
     break;
   }
+  
+  motor.run();
 }
 
 // Функция постоянного вращения
@@ -75,11 +83,11 @@ void rotating() {
   if (!motor.isDone()) {
     return;
   }
-
+  
   if (direction_flag) {
-    motor.setDirection(CW);
-  } else {
     motor.setDirection(CCW);
+  } else {
+    motor.setDirection(CW);
   }
 
   motor.rotate(1);
@@ -90,7 +98,7 @@ void rotateAtAngle(float angle) {
   if (!motor.isDone()) {
     return;
   }
-
+  
   if (reverse_flag) {
     motor.setDirection(CW);
     motor.rotateDegrees(angle);
@@ -101,4 +109,29 @@ void rotateAtAngle(float angle) {
   motor.setDirection(CCW);
   motor.rotateDegrees(angle);
   reverse_flag = true;
+}
+
+void setModeLed(int ledNum) {
+  switch (ledNum) {
+    case 1: digitalWrite(led_1, HIGH);
+    digitalWrite(led_2, LOW);
+    digitalWrite(led_3, LOW);
+    digitalWrite(led_4, LOW);
+    break;
+    case 2: digitalWrite(led_2, HIGH);
+    digitalWrite(led_1, LOW);
+    digitalWrite(led_3, LOW);
+    digitalWrite(led_4, LOW);
+    break;
+    case 3: digitalWrite(led_3, HIGH);
+    digitalWrite(led_1, LOW);
+    digitalWrite(led_2, LOW);
+    digitalWrite(led_4, LOW);
+    break;
+    case 4: digitalWrite(led_4, HIGH);
+    digitalWrite(led_1, LOW);
+    digitalWrite(led_2, LOW);
+    digitalWrite(led_3, LOW);
+    break;
+  }
 }
